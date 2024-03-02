@@ -5,7 +5,6 @@ import com.example.cartapi.model.Cart;
 import com.example.cartapi.model.CartItem;
 import com.example.cartapi.repository.CartRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -17,8 +16,7 @@ public class CartService {
     private final CartRepository cartRepository;
 
 
-    @KafkaListener(topics = "topicProduct", groupId = "group_Id")
-    public Cart addProductToCart(Long userId, CartItem cartItem) {
+    public void addProductToCart(Long userId, CartItem cartItem) {
         Cart cart = cartRepository.findByUserId(userId).orElse(Cart.builder()
                 .userId(userId)
                 .build());
@@ -33,7 +31,7 @@ public class CartService {
         } else {
             cart.getCartItemsId().add(cartItem);
         }
-        return cartRepository.save(cart);
+        cartRepository.save(cart);
 
     }
 

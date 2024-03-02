@@ -17,6 +17,7 @@ public class ConsumerService {
     private final ObjectMapper objectMapper;
     private final CartService cartService;
 
+
     @KafkaListener(topics = "topicProduct", groupId = "group_Id")
     public void createCart(String message) {
         try {
