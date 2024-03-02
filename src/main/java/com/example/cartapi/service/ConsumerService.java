@@ -1,5 +1,6 @@
 package com.example.cartapi.service;
 
+import com.example.cartapi.dto.CartEvent;
 import com.example.cartapi.model.CartItem;
 import com.example.cartapi.model.ProductId;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,11 +21,14 @@ public class ConsumerService {
     public void createCart(String message) {
         try {
             log.info("Consumed message: {}", message);
-            ProductId productId = objectMapper.readValue(message, ProductId.class);
+            CartEvent cartEvent = objectMapper.readValue(message, CartEvent.class);
 
             CartItem cartItem = new CartItem();
-            cartItem.setProductId(productId);
-            cartService.addProductToCart(productId.getUserId(), cartItem);
+            cartItem.setProductId(ProductId.builder()
+                    .productId(cartEvent.getProductId())
+                    .quantity(cartEvent.getQuantity())
+                    .build());
+            cartService.addProductToCart(cartEvent.getUserId(), cartItem);
 
             log.info("Product saved in Elasticsearch: {}", cartItem);
         } catch (Exception e) {
@@ -33,5 +37,4 @@ public class ConsumerService {
     }
 
 
-    
 }

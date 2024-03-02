@@ -25,7 +25,7 @@ public class ProductId {
 
     private Integer quantity;
 
-    private Long userId;
+
 
 
 

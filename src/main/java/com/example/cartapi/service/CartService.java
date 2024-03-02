@@ -19,11 +19,9 @@ public class CartService {
 
     @KafkaListener(topics = "topicProduct", groupId = "group_Id")
     public Cart addProductToCart(Long userId, CartItem cartItem) {
-        Cart cart = cartRepository.findByUserId(userId);
-        if (cart == null) {
-            cart = new Cart();
-            cart.setUserId(userId);
-        }
+        Cart cart = cartRepository.findByUserId(userId).orElse(Cart.builder()
+                .userId(userId)
+                .build());
 
         Optional<CartItem> existingProductId = cart.getCartItemsId().stream()
                 .filter(i -> i.getProductId().equals(cartItem.getProductId()))
